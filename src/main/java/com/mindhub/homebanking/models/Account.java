@@ -1,11 +1,10 @@
 package com.mindhub.homebanking.models;
 
 import jakarta.persistence.*;
-
-
 import java.time.LocalDate;
-
-
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity   //es para que Spring cree la tabla en la base de datos
 public class Account {
@@ -19,11 +18,14 @@ public class Account {
     private double balance;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="client_id")
+    @JoinColumn(name = "client_id")
     private Client client;
 
+    @OneToMany(mappedBy = "account", fetch = FetchType.EAGER)
+    private Set<Transaction> transactions = new HashSet<>();
 
-    public Account() { }  //este lo usa hibernate por defecto para validar. tener espacio en memoria
+    public Account() {
+    }
 
     public Account(String number, LocalDate creationDate, double balance) {
         this.number = number;
@@ -39,10 +41,10 @@ public class Account {
     public void setClient(Client client) {
         this.client = client;
     }
+
     public long getId() {
         return id;
     }
-
 
     public String getNumber() {
         return number;
@@ -67,6 +69,20 @@ public class Account {
     public void setBalance(double balance) {
         this.balance = balance;
     }
+
+    public void addTransaction(Transaction transaction) {
+        this.transactions.add(transaction);
+        transaction.setAccount(this);
+    }
+
+    public Set<Transaction> getTransactions() {
+        return transactions;
+    }
+
+    public void setTransactions(Set<Transaction> transactions) {
+        this.transactions = transactions;
+    }
+
     @Override
     public String toString() {
         return "Account{" +
@@ -76,4 +92,5 @@ public class Account {
                 ", balance=" + balance +
                 '}';
     }
+
 }
