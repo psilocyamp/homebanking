@@ -2,22 +2,19 @@ package com.mindhub.homebanking;
 
 import com.mindhub.homebanking.dtos.AccountDTO;
 import com.mindhub.homebanking.dtos.ClientDTO;
-import com.mindhub.homebanking.models.Account;
-import com.mindhub.homebanking.models.Transaction;
-import com.mindhub.homebanking.models.TransactionType;
-import com.mindhub.homebanking.repositories.AccountRepository;
-import com.mindhub.homebanking.repositories.TransactionRepository;
+import com.mindhub.homebanking.models.*;
+import com.mindhub.homebanking.repositories.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 // Importa tu repositorio y entidad Cliente
-import com.mindhub.homebanking.models.Client;
-import com.mindhub.homebanking.repositories.ClientRepository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 
 @SpringBootApplication
@@ -32,7 +29,7 @@ public class HomebankingApplication {
 
 	// Método que se ejecuta al iniciar la aplicación. esta en el contexto de spring, porq no teiene anotaciones
 	@Bean
-	public CommandLineRunner initData(ClientRepository clientRepository, AccountRepository accountRepository, TransactionRepository transactionRepository) { //init data es el nombre del metodo 	//inyeccion de dependencias. corredor de comandos en linea
+	public CommandLineRunner initData(ClientRepository clientRepository, AccountRepository accountRepository, TransactionRepository transactionRepository, LoanRepository loanRepository, ClientLoanRepository clientLoanRepository) { //init data es el nombre del metodo 	//inyeccion de dependencias. corredor de comandos en linea
 		return (args) -> {
 			// Crear y guardar los clientes utilizando DTOs
 
@@ -150,6 +147,39 @@ public class HomebankingApplication {
 			transactionRepository.save(transaccion2Jane2);
 			transactionRepository.save(transaccion3Jane2);
 
+
+
+			//crear prestamos
+			Loan mortgage = new Loan("Mortgage", 500.000, Arrays.asList(12, 24, 36, 48, 60, 72));
+			Loan personal = new Loan("Personal", 100.000,  Arrays.asList(6,12,24));
+			Loan automotive = new Loan("Automotive", 300.000, Arrays.asList(6,12,24,36));
+			loanRepository.save(mortgage);
+			loanRepository.save(personal);
+			loanRepository.save(automotive);
+
+
+			//crear prestamos a las cuentas
+
+			ClientLoan clientLoan1 = new ClientLoan( 400.000, 60);
+			melba.addClientLoan(clientLoan1);//aca melba aspira a ese prestamo
+			mortgage.addClientLoan(clientLoan1);//aca le doy el prestamo
+			clientLoanRepository.save(clientLoan1);
+
+			ClientLoan clientLoan2 = new ClientLoan( 50.000, 12);
+			melba.addClientLoan(clientLoan2);//aca melba aspira a ese prestamo
+			personal.addClientLoan(clientLoan2);//aca le doy el prestamo
+			clientLoanRepository.save(clientLoan2);
+
+
+			ClientLoan clientLoan3 = new ClientLoan(100.000, 24);
+			jane.addClientLoan(clientLoan3);
+			personal.addClientLoan(clientLoan3);
+            clientLoanRepository.save(clientLoan3);
+
+			ClientLoan clientLoan4 = new ClientLoan(200.000, 36);
+			jane.addClientLoan(clientLoan4);
+			automotive.addClientLoan(clientLoan4);
+			clientLoanRepository.save(clientLoan4);
 
 
 		};

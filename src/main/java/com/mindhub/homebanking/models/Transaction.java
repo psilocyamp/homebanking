@@ -4,21 +4,22 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
-@Entity
+    @Entity
     public class Transaction {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private double amount;
     private String description;
     private LocalDateTime date;
+
     @Enumerated(EnumType.STRING) //para pasar el enumero a string
     private TransactionType type;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER) //
     @JoinColumn(name="account_id")
-
-
     private Account account;
 
     // Constructor sin parámetros requerido por JPA

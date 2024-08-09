@@ -1,9 +1,10 @@
 package com.mindhub.homebanking.dtos;
 
-import com.mindhub.homebanking.models.Account;
 import com.mindhub.homebanking.models.Client;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -13,6 +14,7 @@ public class ClientDTO {
     private String lastName;
     private String email;
     private Set<AccountDTO> accounts = new HashSet<>();
+    private List<ClientLoanDTO> loans = new ArrayList<>();
 
     // Constructor
     public ClientDTO(Client client) {
@@ -20,7 +22,16 @@ public class ClientDTO {
         this.lastName = client.getLastName();
         this.firstName = client.getFirstName();
         this.email = client.getEmail();
-        this.accounts = client.getAccounts().stream().map(AccountDTO::new).collect(Collectors.toSet());
+
+        this.accounts = client.getAccounts()
+                .stream()
+                .map(AccountDTO::new)
+                .collect(Collectors.toSet());
+
+        this.loans =client.getClientLoans()
+                .stream()
+                .map(ClientLoanDTO::new)
+                .collect(Collectors.toList());
     }
 
     public long getId() {
@@ -41,6 +52,8 @@ public class ClientDTO {
 
     public Set<AccountDTO> getAccounts() {
         return accounts;
-
+    }
+    public List<ClientLoanDTO> getLoans() {
+        return loans;
     }
     }

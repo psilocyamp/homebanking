@@ -39,7 +39,10 @@ public class ClientController {
 
     @GetMapping   //para mapear la ruta /api/clients/ a un método que devuelva todos los clientes de la base de datos.por defecto uso la ruta de arriba
     public List<ClientDTO> getAllClients() {
-        return clientRepository.findAll().stream().map(ClientDTO::new).collect(toList());
+        return clientRepository.findAll()//lista de todos los clientes en la base de datos
+                .stream() //para acceder a los metodos d orden sup
+                .map(client -> new ClientDTO(client))
+                .collect(toList());
     }
 
     //mappear la ruta a una solicitud de tipo GET
