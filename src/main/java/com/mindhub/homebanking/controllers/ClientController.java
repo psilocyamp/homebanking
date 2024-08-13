@@ -32,7 +32,7 @@ public class ClientController {
     @Autowired
     private AccountRepository accountRepository;
 
-    @GetMapping("/hello")    //Esta anotación mapea la ruta "/hola" a la getClients() método. Significa que cuando recibimos una solicitud GET en la ruta "/hola" (la ruta completa sería http://localhost:8080/api/clients/hello), este método será invocado.
+    @GetMapping("/hello")
     public String getClients() { //mapping, asociado
         return "Hello clients!";
     }
@@ -41,18 +41,20 @@ public class ClientController {
     public List<ClientDTO> getAllClients() {
         return clientRepository.findAll()//lista de todos los clientes en la base de datos
                 .stream() //para acceder a los metodos d orden sup
+                .filter(Client -> Client.isActive()== true)
                 .map(client -> new ClientDTO(client))
                 .collect(toList());
     }
 
     //mappear la ruta a una solicitud de tipo GET
     @GetMapping("/{id}")
-    public ResponseEntity<Client> getClient(@PathVariable Long id) {
+    public ResponseEntity<ClientDTO> getClient(@PathVariable Long id) {
         Client client = clientRepository.findById(id).orElse(null);
         if (client == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(client, HttpStatus.OK);
+        ClientDTO clientDTO = new ClientDTO(client);
+        return new ResponseEntity<>(clientDTO, HttpStatus.OK);
     }
 
     //crud crear cliente
@@ -107,8 +109,14 @@ public class ClientController {
     //crud para borrar un cliente
     @DeleteMapping("/delete/{id}")
     public ResponseEntity <String> deleteClient(@PathVariable Long id) {
+     Client client = clientRepository.findById(id).orElse(null);
 
-        clientRepository.deleteById(id);
+     if (client==null){
+         return new ResponseEntity<>("Client not found with id " + id, HttpStatus.NOT_FOUND);
+     }
+
+        client.setActive(false);
+        clientRepository.save(client);
 
         return new ResponseEntity<>("Client deleted successfully", HttpStatus.OK);
     }

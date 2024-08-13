@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Bean;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 
@@ -29,7 +28,7 @@ public class HomebankingApplication {
 
 	// Método que se ejecuta al iniciar la aplicación. esta en el contexto de spring, porq no teiene anotaciones
 	@Bean
-	public CommandLineRunner initData(ClientRepository clientRepository, AccountRepository accountRepository, TransactionRepository transactionRepository, LoanRepository loanRepository, ClientLoanRepository clientLoanRepository) { //init data es el nombre del metodo 	//inyeccion de dependencias. corredor de comandos en linea
+	public CommandLineRunner initData(ClientRepository clientRepository, AccountRepository accountRepository, TransactionRepository transactionRepository, LoanRepository loanRepository, ClientLoanRepository clientLoanRepository,CardRepository cardRepository) { //init data es el nombre del metodo 	//inyeccion de dependencias. corredor de comandos en linea
 		return (args) -> {
 			// Crear y guardar los clientes utilizando DTOs
 
@@ -181,6 +180,20 @@ public class HomebankingApplication {
 			automotive.addClientLoan(clientLoan4);
 			clientLoanRepository.save(clientLoan4);
 
+
+
+			//implementar cards
+
+			Card card1 = new Card(CardType.DEBIT, CardColor.GOLD, LocalDate.now(), LocalDate.now().plusYears(5));
+			Card card2 = new Card(CardType.CREDIT, CardColor.TITANIUM, LocalDate.now(), LocalDate.now().plusYears(5));
+			Card card3 = new Card(CardType.CREDIT, CardColor.SILVER, LocalDate.now(), LocalDate.now().plusYears(5));
+
+			melba.addClientCard(card1);
+			melba.addClientCard(card2);
+			john.addClientCard(card3);
+			cardRepository.save(card1);
+			cardRepository.save(card2);
+			cardRepository.save(card3);
 
 		};
 	}
