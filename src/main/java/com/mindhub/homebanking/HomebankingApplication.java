@@ -4,16 +4,19 @@ import com.mindhub.homebanking.dtos.AccountDTO;
 import com.mindhub.homebanking.dtos.ClientDTO;
 import com.mindhub.homebanking.models.*;
 import com.mindhub.homebanking.repositories.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 // Importa tu repositorio y entidad Cliente
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+
 
 
 @SpringBootApplication
@@ -25,16 +28,17 @@ public class HomebankingApplication {
 		SpringApplication.run(HomebankingApplication.class, args);   //le cedo el control a spring
 	}
 
-
+@Autowired
+private PasswordEncoder passwordEncoder;
 	// Método que se ejecuta al iniciar la aplicación. esta en el contexto de spring, porq no teiene anotaciones
 	@Bean
 	public CommandLineRunner initData(ClientRepository clientRepository, AccountRepository accountRepository, TransactionRepository transactionRepository, LoanRepository loanRepository, ClientLoanRepository clientLoanRepository,CardRepository cardRepository) { //init data es el nombre del metodo 	//inyeccion de dependencias. corredor de comandos en linea
 		return (args) -> {
 			// Crear y guardar los clientes utilizando DTOs
 
-			Client melba = new Client("Melba", "Molina", "jTqFP@example.com");
-			Client john = new Client("John", "Doe", "lVJZd@example.com");
-			Client jane = new Client("Jane", "Doe", "lVJZd@example.com");
+			Client melba = new Client("Melba", "Molina", "jTqFP@example.com",passwordEncoder.encode("melba123"));
+			Client john = new Client("John", "Doe", "lVJZd@example.com", passwordEncoder.encode("john123"));
+			Client jane = new Client("Jane", "Doe", "lVJZd@example.com", passwordEncoder.encode("jane123"));
 
 			ClientDTO melbaDTO = new ClientDTO(melba);
 			ClientDTO johnDTO = new ClientDTO(john);

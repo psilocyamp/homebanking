@@ -14,7 +14,7 @@ public class Card {
     private CardType type;
     private CardColor color;
     private String number;
-    private int cvv;
+    private String cvv;
     private LocalDate fromDate;
     private LocalDate thruDate;
 
@@ -72,11 +72,11 @@ public class Card {
         this.number = number;
     }
 
-    public int getCvv() {
+    public String getCvv() {
         return cvv;
     }
 
-    public void setCvv(int cvv) {
+    public void setCvv(String cvv) {
         this.cvv = cvv;
     }
 

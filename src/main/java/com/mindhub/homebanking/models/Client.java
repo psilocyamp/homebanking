@@ -1,16 +1,21 @@
-
-//aca creo la entidad en la base de datos llamada cliente
-
 package com.mindhub.homebanking.models;
-
 import com.mindhub.homebanking.models.utils.CardNumberGenerator;
+import com.mindhub.homebanking.utils.CvvGenerator;
 import jakarta.persistence.*;
+import org.springframework.beans.factory.annotation.Autowired;
+
 
 import java.util.*;
 
 
 @Entity   //es para que Spring cree la tabla en la base de datos
     public class Client {
+
+    @Autowired
+    private CardNumberGenerator cardNumberGenerator;
+
+    @Autowired
+    private CvvGenerator cvvGenerator;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)   //y aca le pido a la base de datos que genere el id
@@ -19,6 +24,7 @@ import java.util.*;
     private String firstName;
     private String lastName;
     private String email;
+    private String password;
     private boolean active = true;
 
 
@@ -29,14 +35,15 @@ import java.util.*;
     private List<ClientLoan> clientLoans = new ArrayList<>();
 
     @OneToMany(mappedBy = "client", fetch = FetchType.EAGER)
-    private List<Card> clientCards = new ArrayList<>();
+    private Set<Card> clientCards = new HashSet<>();
 
-    public Client() { }  //este lo usa hibernate por defecto para validar. tener espacio en memoria
+    public Client() { }
 
-    public Client(String first, String last, String email) {
+    public Client(String first, String last, String email, String password) {
         this.firstName = first;
         this.lastName = last;
         this.email= email;
+        this.password= password;
     }
     public String getEmail() {
         return email;
@@ -65,8 +72,25 @@ import java.util.*;
         return id;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+
     public Set<Account> getAccounts() { //coleccion de cuentas
         return accounts;
+    }
+
+    public void setClientLoans(List<ClientLoan> clientLoans) {
+        this.clientLoans = clientLoans;
+    }
+
+    public void setClientCards(Set<Card> clientCards) {
+        this.clientCards = clientCards;
+    }
+
+    public void setAccounts(Set<Account> accounts) {
+        this.accounts = accounts;
     }
 
     public List<ClientLoan> getClientLoans() {
@@ -81,7 +105,7 @@ import java.util.*;
         return active;
     }
 
-    public List<Card> getClientCards() {
+    public Set<Card> getClientCards() {
             return clientCards;
     }
 
@@ -110,11 +134,12 @@ import java.util.*;
 
         public void addClientCard(Card card) {
             this.clientCards.add(card);
-            card.setNumber(new CardNumberGenerator().generateCardNumber());
+            card.setNumber(cardNumberGenerator.generateCardNumber());
             card.setClient(this);
             card.setCardHolder(this.firstName + " " + this.lastName);
-            card.setCvv(new Random().nextInt((999 - 100) + 1) + 100);
+            card.setCvv(cvvGenerator.cvvNumber());
         }
 
 
-    }
+
+}
