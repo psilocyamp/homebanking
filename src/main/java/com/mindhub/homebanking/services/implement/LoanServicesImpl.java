@@ -62,13 +62,15 @@ public class LoanServicesImpl implements LoanServices {
 
         double interestRate = determineInterestRate(loanApplicationDTO.payments());
         double finalAmount = calculateFinalAmount(loanApplicationDTO.amount(), interestRate);
+        double amount=loanApplicationDTO.amount();
+
 
         ClientLoan clientLoan = new ClientLoan(finalAmount, loanApplicationDTO.payments());
         clientLoan.setClient(client);
         clientLoan.setLoan(loan);
         clientLoanRepository.save(clientLoan);
 
-        createAndSaveTransaction(finalAmount, loan, account);
+        createAndSaveTransaction(amount, loan, account);
 
         return new ResponseEntity<>("Loan application completed successfully", HttpStatus.CREATED);
     }
