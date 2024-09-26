@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface CardRepository extends JpaRepository<Card, Long> {
     List<Card> findByClient(Client client);
-    Boolean existsByCardNumber(String cardNumber);
-    Boolean existsByCvv(String cvv);
+   // Boolean existsByCardNumber(String cardNumber);
+    Boolean existsByCvv(int cvv);
 }

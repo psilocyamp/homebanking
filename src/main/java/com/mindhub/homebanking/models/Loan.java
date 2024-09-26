@@ -23,8 +23,7 @@ public class Loan {
     private List<ClientLoan> clientLoans = new ArrayList<>();
 
 
-public  Loan (){
-}
+public Loan (){}
 
 public Loan( String name, double maxAmount, List<Integer> payments) {
 

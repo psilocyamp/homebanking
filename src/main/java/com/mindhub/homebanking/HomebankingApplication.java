@@ -4,6 +4,8 @@ import com.mindhub.homebanking.dtos.AccountDTO;
 import com.mindhub.homebanking.dtos.ClientDTO;
 import com.mindhub.homebanking.models.*;
 import com.mindhub.homebanking.repositories.*;
+import com.mindhub.homebanking.utils.CardNumberGenerator;
+import com.mindhub.homebanking.utils.CvvGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -23,22 +25,21 @@ import java.util.Arrays;
 public class HomebankingApplication {
 
 
-//aca arranca la app
 	public static void main(String[] args) {
 		SpringApplication.run(HomebankingApplication.class, args);   //le cedo el control a spring
 	}
 
 @Autowired
 private PasswordEncoder passwordEncoder;
-	// Método que se ejecuta al iniciar la aplicación. esta en el contexto de spring, porq no teiene anotaciones
 	@Bean
-	public CommandLineRunner initData(ClientRepository clientRepository, AccountRepository accountRepository, TransactionRepository transactionRepository, LoanRepository loanRepository, ClientLoanRepository clientLoanRepository,CardRepository cardRepository) { //init data es el nombre del metodo 	//inyeccion de dependencias. corredor de comandos en linea
+	public CommandLineRunner initData(ClientRepository clientRepository, AccountRepository accountRepository, TransactionRepository transactionRepository, LoanRepository loanRepository, ClientLoanRepository clientLoanRepository, CardRepository cardRepository, CardNumberGenerator cardNumberGenerator, CvvGenerator cvvGenerator) { //init data es el nombre del metodo 	//inyeccion de dependencias. corredor de comandos en linea
 		return (args) -> {
+
 			// Crear y guardar los clientes utilizando DTOs
 
 			Client melba = new Client("Melba", "Molina", "jTqFP@example.com",passwordEncoder.encode("melba123"));
-			Client john = new Client("John", "Doe", "lVJZd@example.com", passwordEncoder.encode("john123"));
-			Client jane = new Client("Jane", "Doe", "lVJZd@example.com", passwordEncoder.encode("jane123"));
+			Client john = new Client("John", "Doe", "example@example.com", passwordEncoder.encode("john12345"));
+			Client jane = new Client("Jane", "Doe", "janed@example.com", passwordEncoder.encode("jane123"));
 
 			ClientDTO melbaDTO = new ClientDTO(melba);
 			ClientDTO johnDTO = new ClientDTO(john);
@@ -153,9 +154,9 @@ private PasswordEncoder passwordEncoder;
 
 
 			//crear prestamos
-			Loan mortgage = new Loan("Mortgage", 500.000, Arrays.asList(12, 24, 36, 48, 60, 72));
-			Loan personal = new Loan("Personal", 100.000,  Arrays.asList(6,12,24));
-			Loan automotive = new Loan("Automotive", 300.000, Arrays.asList(6,12,24,36));
+			Loan mortgage = new Loan("Mortgage", 500000.00, Arrays.asList(12, 24, 36, 48, 60, 72));
+			Loan personal = new Loan("Personal", 100000.00,  Arrays.asList(6,12,24));
+			Loan automotive = new Loan("Automotive", 300000.00, Arrays.asList(6,12,24,36));
 			loanRepository.save(mortgage);
 			loanRepository.save(personal);
 			loanRepository.save(automotive);
@@ -188,9 +189,9 @@ private PasswordEncoder passwordEncoder;
 
 			//implementar cards
 
-			Card card1 = new Card(CardType.DEBIT, CardColor.GOLD, LocalDate.now(), LocalDate.now().plusYears(5));
-			Card card2 = new Card(CardType.CREDIT, CardColor.TITANIUM, LocalDate.now(), LocalDate.now().plusYears(5));
-			Card card3 = new Card(CardType.CREDIT, CardColor.SILVER, LocalDate.now(), LocalDate.now().plusYears(5));
+			Card card1 = new Card(Type.DEBIT, CardColor.GOLD, CardNumberGenerator.generateCardNumber(), CvvGenerator.cvvNumber(), LocalDate.now(), LocalDate.now().plusYears(5));
+			Card card2 = new Card(Type.CREDIT, CardColor.TITANIUM, CardNumberGenerator.generateCardNumber(), CvvGenerator.cvvNumber(), LocalDate.now(), LocalDate.now().plusYears(5));
+			Card card3 = new Card(Type.CREDIT, CardColor.SILVER,CardNumberGenerator.generateCardNumber(), CvvGenerator.cvvNumber(),  LocalDate.now(), LocalDate.now().plusYears(5));
 
 			melba.addClientCard(card1);
 			melba.addClientCard(card2);
@@ -199,6 +200,6 @@ private PasswordEncoder passwordEncoder;
 			cardRepository.save(card2);
 			cardRepository.save(card3);
 
-		};
+	};
 	}
 }

@@ -22,8 +22,7 @@ import java.time.LocalDateTime;
     @JoinColumn(name="account_id")
     private Account account;
 
-    // Constructor sin parámetros requerido por JPA
-    public Transaction() {
+    public Transaction () {
     }
 
     public Transaction(double amount, String description, LocalDateTime date, TransactionType type) {

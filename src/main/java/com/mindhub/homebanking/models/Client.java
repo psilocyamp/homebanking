@@ -1,8 +1,6 @@
 package com.mindhub.homebanking.models;
-import com.mindhub.homebanking.models.utils.CardNumberGenerator;
-import com.mindhub.homebanking.utils.CvvGenerator;
 import jakarta.persistence.*;
-import org.springframework.beans.factory.annotation.Autowired;
+
 
 
 import java.util.*;
@@ -10,12 +8,6 @@ import java.util.*;
 
 @Entity   //es para que Spring cree la tabla en la base de datos
     public class Client {
-
-    @Autowired
-    private CardNumberGenerator cardNumberGenerator;
-
-    @Autowired
-    private CvvGenerator cvvGenerator;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)   //y aca le pido a la base de datos que genere el id
@@ -134,12 +126,7 @@ import java.util.*;
 
         public void addClientCard(Card card) {
             this.clientCards.add(card);
-            card.setNumber(cardNumberGenerator.generateCardNumber());
             card.setClient(this);
             card.setCardHolder(this.firstName + " " + this.lastName);
-            card.setCvv(cvvGenerator.cvvNumber());
         }
-
-
-
 }

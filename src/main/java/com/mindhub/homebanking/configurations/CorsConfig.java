@@ -23,7 +23,7 @@ public class CorsConfig {
 
         // Especifica los orígenes permitidos para las solicitudes CORS.
         // Aquí, se permiten solicitudes desde http://localhost:8080 y http://localhost:5173.
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8080", "http://localhost:5173"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8080", "http://localhost:5175","http://localhost:5173", "https://homebankingfront-6n5u.onrender.com/"));
 
         // Especifica los métodos HTTP permitidos para las solicitudes CORS.
         // En este caso, se permiten los métodos GET, POST, PUT y DELETE.
@@ -34,7 +34,7 @@ public class CorsConfig {
         configuration.setAllowedHeaders(List.of("*"));
 
         // Configura la fuente de configuración de CORS con las reglas especificadas.
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource(); //new refiere a un nuevo metodo constructor
         source.registerCorsConfiguration("/**", configuration);
 
         // Retorna la fuente de configuración de CORS.

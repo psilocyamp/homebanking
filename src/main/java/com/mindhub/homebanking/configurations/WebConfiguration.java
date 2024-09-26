@@ -32,26 +32,28 @@ public class WebConfiguration {
         httpSecurity
                 // Configuración de CORS utilizando la fuente de configuración proporcionada.
                 .cors(cors -> cors.configurationSource(corsConfigurationSource))
-                // Desactiva la protección CSRF (Cross-Site Request Forgery).
+                // genera un token para usar el form interno, como trabajmos con front externo no nos va a dejar
                 .csrf(AbstractHttpConfigurer::disable)
                 // Desactiva la autenticación básica HTTP.
                 .httpBasic(AbstractHttpConfigurer::disable)
                 // Desactiva el formulario de inicio de sesión.
                 .formLogin(AbstractHttpConfigurer::disable)
 
-                // Configura los encabezados de seguridad, desactivando la protección contra marcos (frame options).
+                //desactivo para poder usar la consola h2, q es un iframe
                 .headers(httpSecurityHeadersConfigurer -> httpSecurityHeadersConfigurer.frameOptions(
                         HeadersConfigurer.FrameOptionsConfig::disable))
 
                 // Configura las reglas de autorización para las solicitudes HTTP.
                 .authorizeHttpRequests(authorize ->
                         authorize
-                                .requestMatchers("/api/clients/", "/api/clients/**", "/api/accounts/", "/api/accounts/**").hasRole("ADMIN")
 
                                 // Permite el acceso sin autenticación a las rutas especificadas (login, registro, y consola H2).
                                 .requestMatchers("/api/auth/login", "/api/auth/register", "/h2-console/**").permitAll()
 
-                                .requestMatchers("/api/auth/current").hasRole("CLIENT")
+                                .requestMatchers("/api/auth/current", "/api/transactions", "/api/loans/", "/api/current/cards", "/api/clients/current/accounts", "/api/clients/**").hasRole("CLIENT")
+
+                                .requestMatchers("/api/clients/",  "/api/accounts/", "/api/accounts/**").hasRole("ADMIN")
+
                 )
 
                 // Agrega el filtro JWT antes del filtro de autenticación por nombre de usuario y contraseña.
