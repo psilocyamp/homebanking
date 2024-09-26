@@ -2,6 +2,8 @@ package com.mindhub.homebanking.models;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
+
 
 @Entity
 public class ClientLoan {
@@ -9,6 +11,8 @@ public class ClientLoan {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Double amountRequested;
+    private LocalDate startDate;
     private double amount;
     private int payments;
 //fetch como se cargara la relacion cuando se recupere la entidad en la db
@@ -24,6 +28,7 @@ public class ClientLoan {
     }
 
     public ClientLoan(double amount, int payments) {
+
         this.amount = amount;
         this.payments = payments;
     }

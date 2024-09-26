@@ -82,7 +82,9 @@ public class LoanServicesImpl implements LoanServices {
         if (dto.amount() <= 0) {
             throw new InvalidInputException("Loan amount must be greater than zero");
         }
-
+        if(dto.amount()> loan.getMaxAmount()){
+            throw new InvalidInputException("Loan amount must be less than or equal to " + loan.getMaxAmount());
+        }
         if (dto.payments() <= 0) {
             throw new InvalidInputException("Number of payments must be greater than zero");
         }
