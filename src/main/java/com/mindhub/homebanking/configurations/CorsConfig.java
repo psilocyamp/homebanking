@@ -23,7 +23,7 @@ public class CorsConfig {
 
         // Especifica los orígenes permitidos para las solicitudes CORS.
         // Aquí, se permiten solicitudes desde http://localhost:8080 y http://localhost:5173.
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8080", "http://localhost:5175","http://localhost:5173", "https://homebankingfront-6n5u.onrender.com/"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8080", "http://localhost:5175","http://localhost:5173", "https://homebankingfront-6n5u.onrender.com"));
 
         // Especifica los métodos HTTP permitidos para las solicitudes CORS.
         // En este caso, se permiten los métodos GET, POST, PUT y DELETE.
