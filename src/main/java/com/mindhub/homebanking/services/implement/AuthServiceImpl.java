@@ -100,7 +100,7 @@ public class AuthServiceImpl implements AuthService {
         String encodedPassword = passwordEncoder.encode(registerDTO.password());
         Client newClient = new Client(registerDTO.firstName(), registerDTO.lastName(), registerDTO.email(), encodedPassword);
         clientServices.saveClient(newClient);
-        Account newAccount = new Account(makeAccountNumber(), LocalDate.now(), 0.0);
+        Account newAccount = new Account("VIN-" + makeAccountNumber(), LocalDate.now(), 0.0);
         newClient.addAccount(newAccount);
 
         accountServices.saveAccount(newAccount);
